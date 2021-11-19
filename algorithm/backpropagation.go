@@ -29,9 +29,9 @@ func d_sigmoid(x float64) (s float64) {
 	return
 }
 
-func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10]float64, o_weight [28]float64, o_bias [5]float64) {
+func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10000]float64, o_weight [36]float64, o_bias [5]float64) {
 	rows := len(X)
-	Weight := [28]float64{0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.2, 0.1, 0.3, 0.9, 0.4, 0.5, 0.3, 0.7, 0.6, 0.1, 0.85, 0.2, 0.55, 0.1, 0.65, 0.15, 0.45, 0.85, 0.3, 0.5, 0.6, 0.4}
+	Weight := [36]float64{0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.2, 0.1, 0.3, 0.9, 0.4, 0.5, 0.3, 0.7, 0.6, 0.1, 0.85, 0.2, 0.55, 0.1, 0.65, 0.15, 0.45, 0.85, 0.3, 0.5, 0.6, 0.4, 0.1, 0.5, 0.2, 0.9, 0.35, 0.75, 55, 0.8}
 	Learning_Factor := 0.5
 	Bias := [5]float64{1, 1, 1, 1, 1}
 	Epoch := 0
@@ -43,10 +43,10 @@ func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10]float64, o_weigh
 		for j < rows {
 			//-----------------------------Propagation------------------------------
 			//We calculate the total net input of the hidden layer
-			net_h1 := (Weight[0] * X[j][0]) + (Weight[1] * X[j][1]) + (Weight[2] * X[j][2]) + (Weight[3] * X[j][3]) + (Weight[4] * X[j][4]) + (Weight[5] * X[j][5]) + Bias[0]
-			net_h2 := (Weight[6] * X[j][0]) + (Weight[7] * X[j][1]) + (Weight[8] * X[j][2]) + (Weight[9] * X[j][3]) + (Weight[10] * X[j][4]) + (Weight[11] * X[j][5]) + Bias[1]
-			net_h3 := (Weight[12] * X[j][0]) + (Weight[13] * X[j][1]) + (Weight[14] * X[j][2]) + (Weight[15] * X[j][3]) + (Weight[16] * X[j][4]) + (Weight[17] * X[j][5]) + Bias[2]
-			net_h4 := (Weight[18] * X[j][0]) + (Weight[19] * X[j][1]) + (Weight[20] * X[j][2]) + (Weight[21] * X[j][3]) + (Weight[22] * X[j][4]) + (Weight[23] * X[j][5]) + Bias[3]
+			net_h1 := (Weight[0] * X[j][0]) + (Weight[1] * X[j][1]) + (Weight[2] * X[j][2]) + (Weight[3] * X[j][3]) + (Weight[4] * X[j][4]) + (Weight[5] * X[j][5]) + (Weight[6] * X[j][6]) + Bias[0]
+			net_h2 := (Weight[7] * X[j][0]) + (Weight[8] * X[j][1]) + (Weight[9] * X[j][2]) + (Weight[10] * X[j][3]) + (Weight[11] * X[j][4]) + (Weight[12] * X[j][5]) + (Weight[13] * X[j][6]) + Bias[1]
+			net_h3 := (Weight[14] * X[j][0]) + (Weight[15] * X[j][1]) + (Weight[16] * X[j][2]) + (Weight[17] * X[j][3]) + (Weight[18] * X[j][4]) + (Weight[19]*X[j][5] + (Weight[20] * X[j][6])) + Bias[2]
+			net_h4 := (Weight[21] * X[j][0]) + (Weight[22] * X[j][1]) + (Weight[23] * X[j][2]) + (Weight[24] * X[j][3]) + (Weight[25] * X[j][4]) + (Weight[26] * X[j][5]) + (Weight[27] * X[j][6]) + Bias[3]
 
 			//Execute the sigmoid activation function in the first layer
 			out_h1 := sigmoid(net_h1)
@@ -55,7 +55,7 @@ func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10]float64, o_weigh
 			out_h4 := sigmoid(net_h4)
 
 			//We calculate the total net output of the output layer
-			net_y := (Weight[24] * out_h1) + (Weight[25] * out_h2) + (Weight[26] * out_h3) + (Weight[27] * out_h4) + Bias[4]
+			net_y := (Weight[28] * out_h1) + (Weight[29] * out_h2) + (Weight[30] * out_h3) + (Weight[31] * out_h4) + Bias[4]
 
 			//We execute the sigmoid activation function in the output layer
 			out_y := sigmoid(net_y)
@@ -69,19 +69,19 @@ func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10]float64, o_weigh
 			delta_y := d_sigmoid(net_y) * real_error
 
 			//We adjust the weights of the output layer
-			Weight[24] = Weight[24] + (out_h1 * Learning_Factor * delta_y)
-			Weight[25] = Weight[25] + (out_h2 * Learning_Factor * delta_y)
-			Weight[26] = Weight[26] + (out_h3 * Learning_Factor * delta_y)
-			Weight[27] = Weight[27] + (out_h4 * Learning_Factor * delta_y)
+			Weight[28] = Weight[28] + (out_h1 * Learning_Factor * delta_y)
+			Weight[29] = Weight[29] + (out_h2 * Learning_Factor * delta_y)
+			Weight[30] = Weight[30] + (out_h3 * Learning_Factor * delta_y)
+			Weight[31] = Weight[31] + (out_h4 * Learning_Factor * delta_y)
 
 			//We adjust the bias
 			Bias[4] = Bias[4] + (Learning_Factor * delta_y)
 
 			//Delta rule in the hide layer
-			delta_h1 := d_sigmoid(net_h1) * Weight[24] * delta_y
-			delta_h2 := d_sigmoid(net_h2) * Weight[25] * delta_y
-			delta_h3 := d_sigmoid(net_h3) * Weight[26] * delta_y
-			delta_h4 := d_sigmoid(net_h4) * Weight[27] * delta_y
+			delta_h1 := d_sigmoid(net_h1) * Weight[28] * delta_y
+			delta_h2 := d_sigmoid(net_h2) * Weight[29] * delta_y
+			delta_h3 := d_sigmoid(net_h3) * Weight[30] * delta_y
+			delta_h4 := d_sigmoid(net_h4) * Weight[31] * delta_y
 
 			//We adjust the weights of the input layer
 			Weight[0] = Weight[0] + (delta_h1 * X[j][0] * Learning_Factor)
@@ -90,24 +90,28 @@ func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10]float64, o_weigh
 			Weight[3] = Weight[3] + (delta_h1 * X[j][3] * Learning_Factor)
 			Weight[4] = Weight[4] + (delta_h1 * X[j][4] * Learning_Factor)
 			Weight[5] = Weight[5] + (delta_h1 * X[j][5] * Learning_Factor)
-			Weight[6] = Weight[6] + (delta_h2 * X[j][0] * Learning_Factor)
-			Weight[7] = Weight[7] + (delta_h2 * X[j][1] * Learning_Factor)
-			Weight[8] = Weight[8] + (delta_h2 * X[j][2] * Learning_Factor)
-			Weight[9] = Weight[9] + (delta_h2 * X[j][3] * Learning_Factor)
-			Weight[10] = Weight[10] + (delta_h2 * X[j][4] * Learning_Factor)
-			Weight[11] = Weight[11] + (delta_h2 * X[j][5] * Learning_Factor)
-			Weight[12] = Weight[12] + (delta_h3 * X[j][0] * Learning_Factor)
-			Weight[13] = Weight[13] + (delta_h3 * X[j][1] * Learning_Factor)
-			Weight[14] = Weight[14] + (delta_h3 * X[j][2] * Learning_Factor)
-			Weight[15] = Weight[15] + (delta_h3 * X[j][3] * Learning_Factor)
-			Weight[16] = Weight[16] + (delta_h3 * X[j][4] * Learning_Factor)
-			Weight[17] = Weight[17] + (delta_h3 * X[j][5] * Learning_Factor)
-			Weight[18] = Weight[18] + (delta_h4 * X[j][0] * Learning_Factor)
-			Weight[19] = Weight[19] + (delta_h4 * X[j][1] * Learning_Factor)
-			Weight[20] = Weight[20] + (delta_h4 * X[j][2] * Learning_Factor)
-			Weight[21] = Weight[21] + (delta_h4 * X[j][3] * Learning_Factor)
-			Weight[22] = Weight[22] + (delta_h4 * X[j][4] * Learning_Factor)
-			Weight[23] = Weight[23] + (delta_h4 * X[j][5] * Learning_Factor)
+			Weight[6] = Weight[6] + (delta_h1 * X[j][6] * Learning_Factor)
+			Weight[7] = Weight[7] + (delta_h2 * X[j][0] * Learning_Factor)
+			Weight[8] = Weight[8] + (delta_h2 * X[j][1] * Learning_Factor)
+			Weight[9] = Weight[9] + (delta_h2 * X[j][2] * Learning_Factor)
+			Weight[10] = Weight[10] + (delta_h2 * X[j][3] * Learning_Factor)
+			Weight[11] = Weight[11] + (delta_h2 * X[j][4] * Learning_Factor)
+			Weight[12] = Weight[12] + (delta_h2 * X[j][5] * Learning_Factor)
+			Weight[13] = Weight[13] + (delta_h2 * X[j][6] * Learning_Factor)
+			Weight[14] = Weight[14] + (delta_h3 * X[j][0] * Learning_Factor)
+			Weight[15] = Weight[15] + (delta_h3 * X[j][1] * Learning_Factor)
+			Weight[16] = Weight[16] + (delta_h3 * X[j][2] * Learning_Factor)
+			Weight[17] = Weight[17] + (delta_h3 * X[j][3] * Learning_Factor)
+			Weight[18] = Weight[18] + (delta_h3 * X[j][4] * Learning_Factor)
+			Weight[19] = Weight[19] + (delta_h3 * X[j][5] * Learning_Factor)
+			Weight[20] = Weight[20] + (delta_h3 * X[j][6] * Learning_Factor)
+			Weight[21] = Weight[21] + (delta_h4 * X[j][0] * Learning_Factor)
+			Weight[22] = Weight[22] + (delta_h4 * X[j][1] * Learning_Factor)
+			Weight[23] = Weight[23] + (delta_h4 * X[j][2] * Learning_Factor)
+			Weight[24] = Weight[24] + (delta_h4 * X[j][3] * Learning_Factor)
+			Weight[25] = Weight[25] + (delta_h4 * X[j][4] * Learning_Factor)
+			Weight[26] = Weight[26] + (delta_h4 * X[j][5] * Learning_Factor)
+			Weight[27] = Weight[27] + (delta_h4 * X[j][6] * Learning_Factor)
 
 			//We adjust the bias of the hidden layer
 			Bias[0] = Bias[0] + (Learning_Factor * delta_y)
@@ -126,13 +130,13 @@ func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10]float64, o_weigh
 	return
 }
 
-func prediction(weights [28]float64, bias [5]float64, v_age, v_gender, v_uci, v_oxigen, v_ventilator, v_first_dose float64) (out_y float64) {
+func prediction(weights [36]float64, bias [5]float64, v_age, v_gender, v_uci, v_oxigen, v_ventilator, v_first_dose, v_second_dose float64) (out_y float64) {
 	//-----------------------------Propagation------------------------------
 	//We calculate the total net input of the hidden layer
-	net_h1 := (weights[0] * v_age) + (weights[1] * v_gender) + (weights[2] * v_uci) + (weights[3] * v_oxigen) + (weights[4] * v_ventilator) + (weights[5] * v_first_dose) + bias[0]
-	net_h2 := (weights[6] * v_age) + (weights[7] * v_gender) + (weights[8] * v_uci) + (weights[9] * v_oxigen) + (weights[10] * v_ventilator) + (weights[11] * v_first_dose) + bias[1]
-	net_h3 := (weights[12] * v_age) + (weights[13] * v_gender) + (weights[14] * v_uci) + (weights[15] * v_oxigen) + (weights[16] * v_ventilator) + (weights[18] * v_first_dose) + bias[2]
-	net_h4 := (weights[19] * v_age) + (weights[20] * v_gender) + (weights[21] * v_uci) + (weights[22] * v_oxigen) + (weights[23] * v_ventilator) + (weights[24] * v_first_dose) + bias[3]
+	net_h1 := (weights[0] * v_age) + (weights[1] * v_gender) + (weights[2] * v_uci) + (weights[3] * v_oxigen) + (weights[4] * v_ventilator) + (weights[5] * v_first_dose) + (weights[6] * v_second_dose) + bias[0]
+	net_h2 := (weights[7] * v_age) + (weights[8] * v_gender) + (weights[9] * v_uci) + (weights[10] * v_oxigen) + (weights[11] * v_ventilator) + (weights[12] * v_first_dose) + (weights[13] * v_second_dose) + bias[1]
+	net_h3 := (weights[14] * v_age) + (weights[15] * v_gender) + (weights[16] * v_uci) + (weights[17] * v_oxigen) + (weights[18] * v_ventilator) + (weights[19] * v_first_dose) + (weights[20] * v_second_dose) + bias[2]
+	net_h4 := (weights[21] * v_age) + (weights[22] * v_gender) + (weights[23] * v_uci) + (weights[24] * v_oxigen) + (weights[25] * v_ventilator) + (weights[26] * v_first_dose) + (weights[27] * v_second_dose) + bias[3]
 
 	//Execute the sigmoid activation function in the first layer
 	out_h1 := sigmoid(net_h1)
@@ -141,7 +145,7 @@ func prediction(weights [28]float64, bias [5]float64, v_age, v_gender, v_uci, v_
 	out_h4 := sigmoid(net_h4)
 
 	//We calculate the total net output of the output layer
-	net_y := (weights[24] * out_h1) + (weights[25] * out_h2) + (weights[26] * out_h3) + (weights[27] * out_h4) + bias[4]
+	net_y := (weights[28] * out_h1) + (weights[29] * out_h2) + (weights[30] * out_h3) + (weights[31] * out_h4) + bias[4]
 
 	//We execute the sigmoid activation function in the output layer
 	out_y = sigmoid(net_y)
@@ -217,9 +221,15 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 			} else {
 				first_dose = 1
 			}
-
+			//1st dose
+			var second_dose float64
+			if data[6] == "0" {
+				second_dose = 0
+			} else {
+				second_dose = 1
+			}
 			//Add to the array
-			slice[tmp] = []float64{age / 100, gender, uci, oxigen, ventilation, first_dose}
+			slice[tmp] = []float64{age / 100, gender, uci, oxigen, ventilation, first_dose, second_dose}
 			//fmt.Println(slice)
 			//Output
 			door := data[5] == "alta"
@@ -233,7 +243,7 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 		}
 	}
 	//Epochs
-	Epochs := 10
+	Epochs := 10000
 
 	//Training
 	e, weights, bias := fit(slice, D, Epochs)
@@ -265,15 +275,16 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 	line.Render(w)
 
 	//Prediction
-	v_age := 0.10
+	/*v_age := 0.65
 	v_gender := 0
 	v_uci := 0
 	v_oxigen := 0
 	v_ventilator := 0
-	v_first_dise := 1
+	v_first_dose := 0
+	v_second_dose := 0
 
-	out_y := prediction(weights, bias, v_age, float64(v_gender), float64(v_uci), float64(v_oxigen), float64(v_ventilator), float64(v_first_dise))
-	fmt.Println(out_y)
+	out_y := prediction(weights, bias, v_age, float64(v_gender), float64(v_uci), float64(v_oxigen), float64(v_ventilator), float64(v_first_dose), float64(v_second_dose))
+	fmt.Println(out_y)*/
 }
 
 func main() {
