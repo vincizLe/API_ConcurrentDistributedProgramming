@@ -290,11 +290,11 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 	v_uci := 0
 	v_oxigen := 0
 	v_ventilator := 0
-	v_first_dose := 1
-	v_second_dose := 1
-	v_vaccine := 0.35
+	v_first_dose := 0
+	v_second_dose := 0
+	v_vaccine := 0
 
-	out_y := prediction(weights, bias, v_age, float64(v_gender), float64(v_uci), float64(v_oxigen), float64(v_ventilator), float64(v_first_dose), float64(v_second_dose), v_vaccine)
+	out_y := prediction(weights, bias, v_age, float64(v_gender), float64(v_uci), float64(v_oxigen), float64(v_ventilator), float64(v_first_dose), float64(v_second_dose), float64(v_vaccine))
 	fmt.Println(out_y)
 }
 
