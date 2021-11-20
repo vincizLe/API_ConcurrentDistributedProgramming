@@ -29,9 +29,9 @@ func d_sigmoid(x float64) (s float64) {
 	return
 }
 
-func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10]float64, o_weight [36]float64, o_bias [5]float64) {
+func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10000]float64, o_weight [36]float64, o_bias [5]float64) {
 	rows := len(X)
-	Weight := [36]float64{0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.2, 0.1, 0.3, 0.9, 0.4, 0.5, 0.3, 0.7, 0.6, 0.1, 0.85, 0.2, 0.55, 0.1, 0.65, 0.15, 0.45, 0.85, 0.3, 0.5, 0.6, 0.4, 0.1, 0.5, 0.2, 0.9, 0.35, 0.75, 55, 0.8}
+	Weight := [36]float64{0.1, 0.9, 0.2, 0.8, 0.3, 0.7, 0.2, 0.1, 0.3, 0.9, 0.4, 0.5, 0.3, 0.7, 0.6, 0.1, 0.85, 0.2, 0.55, 0.1, 0.65, 0.15, 0.45, 0.85, 0.3, 0.5, 0.6, 0.4, 0.1, 0.5, 0.2, 0.9, 0.35, 0.75, 0.55, 0.8}
 	Learning_Factor := 0.5
 	Bias := [5]float64{1, 1, 1, 1, 1}
 	Epoch := 0
@@ -134,13 +134,13 @@ func fit(X [][]float64, D [750]float64, Epochs int) (Errors [10]float64, o_weigh
 	return
 }
 
-func prediction(weights [36]float64, bias [5]float64, v_age, v_gender, v_uci, v_oxigen, v_ventilator, v_first_dose, v_second_dose float64) (out_y float64) {
+func prediction(weights [36]float64, bias [5]float64, v_age, v_gender, v_uci, v_oxigen, v_ventilator, v_first_dose, v_second_dose, v_vaccine float64) (out_y float64) {
 	//-----------------------------Propagation------------------------------
 	//We calculate the total net input of the hidden layer
-	net_h1 := (weights[0] * v_age) + (weights[1] * v_gender) + (weights[2] * v_uci) + (weights[3] * v_oxigen) + (weights[4] * v_ventilator) + (weights[5] * v_first_dose) + (weights[6] * v_second_dose) + bias[0]
-	net_h2 := (weights[7] * v_age) + (weights[8] * v_gender) + (weights[9] * v_uci) + (weights[10] * v_oxigen) + (weights[11] * v_ventilator) + (weights[12] * v_first_dose) + (weights[13] * v_second_dose) + bias[1]
-	net_h3 := (weights[14] * v_age) + (weights[15] * v_gender) + (weights[16] * v_uci) + (weights[17] * v_oxigen) + (weights[18] * v_ventilator) + (weights[19] * v_first_dose) + (weights[20] * v_second_dose) + bias[2]
-	net_h4 := (weights[21] * v_age) + (weights[22] * v_gender) + (weights[23] * v_uci) + (weights[24] * v_oxigen) + (weights[25] * v_ventilator) + (weights[26] * v_first_dose) + (weights[27] * v_second_dose) + bias[3]
+	net_h1 := (weights[0] * v_age) + (weights[1] * v_gender) + (weights[2] * v_uci) + (weights[3] * v_oxigen) + (weights[4] * v_ventilator) + (weights[5] * v_first_dose) + (weights[6] * v_second_dose) + (weights[7] * v_vaccine) + bias[0]
+	net_h2 := (weights[8] * v_age) + (weights[9] * v_gender) + (weights[10] * v_uci) + (weights[11] * v_oxigen) + (weights[12] * v_ventilator) + (weights[13] * v_first_dose) + (weights[14] * v_second_dose) + (weights[15] * v_vaccine) + bias[1]
+	net_h3 := (weights[16] * v_age) + (weights[17] * v_gender) + (weights[18] * v_uci) + (weights[19] * v_oxigen) + (weights[20] * v_ventilator) + (weights[21] * v_first_dose) + (weights[22] * v_second_dose) + (weights[23] * v_vaccine) + bias[2]
+	net_h4 := (weights[24] * v_age) + (weights[25] * v_gender) + (weights[26] * v_uci) + (weights[27] * v_oxigen) + (weights[28] * v_ventilator) + (weights[29] * v_first_dose) + (weights[30] * v_second_dose) + (weights[31] * v_vaccine) + bias[3]
 
 	//Execute the sigmoid activation function in the first layer
 	out_h1 := sigmoid(net_h1)
@@ -149,7 +149,7 @@ func prediction(weights [36]float64, bias [5]float64, v_age, v_gender, v_uci, v_
 	out_h4 := sigmoid(net_h4)
 
 	//We calculate the total net output of the output layer
-	net_y := (weights[28] * out_h1) + (weights[29] * out_h2) + (weights[30] * out_h3) + (weights[31] * out_h4) + bias[4]
+	net_y := (weights[32] * out_h1) + (weights[33] * out_h2) + (weights[34] * out_h3) + (weights[35] * out_h4) + bias[4]
 
 	//We execute the sigmoid activation function in the output layer
 	out_y = sigmoid(net_y)
@@ -240,7 +240,7 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 
 			//Add to the array
 			slice[tmp] = []float64{age / 100, gender, uci, oxigen, ventilation, first_dose, second_dose, vaccine}
-			fmt.Println(slice)
+			//fmt.Println(slice)
 			//Output
 			door := data[5] == "alta"
 			if door == true {
@@ -253,7 +253,7 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 		}
 	}
 	//Epochs
-	Epochs := 10
+	Epochs := 10000
 
 	//Training
 	e, weights, bias := fit(slice, D, Epochs)
@@ -285,16 +285,17 @@ func httpserver(w http.ResponseWriter, _ *http.Request) {
 	line.Render(w)
 
 	//Prediction
-	/*v_age := 0.65
+	v_age := 0.65
 	v_gender := 0
 	v_uci := 0
 	v_oxigen := 0
 	v_ventilator := 0
-	v_first_dose := 0
-	v_second_dose := 0
+	v_first_dose := 1
+	v_second_dose := 1
+	v_vaccine := 0.35
 
-	out_y := prediction(weights, bias, v_age, float64(v_gender), float64(v_uci), float64(v_oxigen), float64(v_ventilator), float64(v_first_dose), float64(v_second_dose))
-	fmt.Println(out_y)*/
+	out_y := prediction(weights, bias, v_age, float64(v_gender), float64(v_uci), float64(v_oxigen), float64(v_ventilator), float64(v_first_dose), float64(v_second_dose), v_vaccine)
+	fmt.Println(out_y)
 }
 
 func main() {
