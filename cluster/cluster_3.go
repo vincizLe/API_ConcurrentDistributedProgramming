@@ -117,6 +117,7 @@ func returnInfo() (info Info) {
 	bufferIn := bufio.NewReader(con)
 	bInfo, _ := bufferIn.ReadString('\n')
 	json.Unmarshal([]byte(bInfo), &info)
+	fmt.Println(info)
 	return
 }
 
