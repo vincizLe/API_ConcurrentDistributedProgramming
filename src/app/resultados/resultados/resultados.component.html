@@ -1,0 +1,136 @@
+<p>
+  <mat-toolbar color="primary">
+    <span>Enigma</span>
+  </mat-toolbar>
+</p>
+
+
+<div class="container">
+
+  <h1>Resultados de la Vacuna</h1>
+  <div class="navbar"></div>
+  <div class="header">
+    <div class="header-left">
+      <div class="pie">
+        <app-grafica [chartDatasets]="chartDatasets" [chartLabels]="chartLabels"></app-grafica>
+      </div>
+      <h2>#Fallecidos</h2>
+      <h2>#Contagiados</h2>
+    </div>
+    <div class="header-right">
+      <h3>
+        Los resultados de la investigacion de la base de datos muestran que a lo
+        largo del periodo de vacunacion la vacuna A ha sido la mas eficiente ya
+        que es la que presenta una menor tasa de muerte y contagiados en nuestro
+        pais .
+      </h3>
+      <a mat-raised-button color="primary" class="boton">Compartir</a>
+      <a mat-raised-button color="primary" class="boton"> Exportar Datos </a>
+    </div>
+  </div>
+
+  <h1>Busqueda Personalizada</h1>
+  <div class="body flex-column">
+    <form [formGroup]="form" (ngSubmit)="submitEnviar()">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>DNI</mat-label>
+          <input matInput autocomplete="off" formControlName="dni" />
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Edad</mat-label>
+          <input matInput autocomplete="off" formControlName="edad" />
+        </mat-form-field>
+      </div>
+
+      <!-- Radio button -->
+      <div class="flex-column">
+        <label id="example-radio-group-label">Seleccione su sexo:</label>
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group" formControlName="sexo">
+          <mat-radio-button class="example-radio-button m-r-5" *ngFor="let item of listSexos" [value]="item.valor">
+            {{ item.nombre }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <!-- Radio button -->
+
+      <!-- CAMA UCI button -->
+      <div class="flex-column">
+        <label id="example-radio-group-label">¿Estuviste en cama UCI?:</label>
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+          formControlName="flag_uci">
+          <mat-radio-button class="example-radio-button m-r-5" *ngFor="let item of listCamaUCI" [value]="item.valor">
+            {{ item.nombre }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <!-- CAMA UCI button -->
+      <!-- CAMA UCI button -->
+      <div class="flex-column">
+        <label id="example-radio-group-label">¿Estuviste con Oxigeno?:</label>
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+          formControlName="con_oxigeno">
+          <mat-radio-button class="example-radio-button m-r-5" *ngFor="let item of listOxigeno" [value]="item.valor">
+            {{ item.nombre }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <!-- CAMA UCI button -->
+      <!-- CAMA UCI button -->
+      <div class="flex-column">
+        <label id="example-radio-group-label">¿Estuviste con Ventilacion?:</label>
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+          formControlName="con_ventilacion">
+          <mat-radio-button class="example-radio-button m-r-5" *ngFor="let item of listVentilacion"
+            [value]="item.valor">
+            {{ item.nombre }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <!-- CAMA UCI button -->
+      <!-- CAMA UCI button -->
+      <div class="flex-column">
+        <label id="example-radio-group-label">¿Recibiste primera dosis?:</label>
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+          formControlName="flag_vacuna1">
+          <mat-radio-button class="example-radio-button m-r-5" *ngFor="let item of listDosis1" [value]="item.valor">
+            {{ item.nombre }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <!-- CAMA UCI button -->
+      <!-- CAMA UCI button -->
+      <div class="flex-column">
+        <label id="example-radio-group-label">¿Recibiste segunda dosis?:</label>
+        <mat-radio-group aria-labelledby="example-radio-group-label" class="example-radio-group"
+          formControlName="flag_vacuna2">
+          <mat-radio-button class="example-radio-button m-r-5" *ngFor="let item of listDosis2" [value]="item.valor">
+            {{ item.nombre }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <!-- CAMA UCI button -->
+
+      <mat-form-field appearance="fill">
+        <label>Elige el laboratorio</label>
+        <mat-select [(value)]="selectedFabricante" (selectionChange)="selectOpt($event)">
+          <mat-option *ngFor="let item of listFabricante" [value]="item.valor">
+            {{ item.nombre }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit" class="boton center">
+        Enviar
+      </button>
+      <div class="pie2-bottom" *ngIf="isResultado === true">
+        <div class="pie2">
+          <app-grafica [chartDatasets]="chartDatasets2" [chartLabels]="chartLabels2"></app-grafica>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
