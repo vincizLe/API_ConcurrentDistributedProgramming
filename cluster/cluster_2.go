@@ -138,53 +138,6 @@ func manejadorConexion(con net.Conn) {
 	var info Info
 	json.Unmarshal([]byte(bInfo), &info)
 	fmt.Println(info)
-
-	//Evaluar según el tipo de mensaje
-	switch info.Tipo {
-	case "ENVIOTOKEN":
-		//recuperar del canal la info del nodo
-		myInfo := <-chanMyInfo
-		if info.NumNodo < token {
-			myInfo.primero = false
-		} else if info.NumNodo < myInfo.proxNum {
-			myInfo.proxAddr = info.AddrNodo
-			myInfo.proxNum = info.NumNodo
-		}
-		//actualiza el numero de nodos notificados
-		myInfo.contadorMsg++
-		//retorno por canal con la info actual
-		go func() {
-			chanMyInfo <- myInfo
-		}()
-		//evaluar el fin del proceso
-		if myInfo.contadorMsg == len(addrs) {
-			//evaluar
-			if myInfo.primero {
-				procesarSC()
-			} else {
-				chanIniciar <- true //sincronización, pausa
-			}
-		}
-	case "INICIO":
-		<-chanIniciar //espera hasta que llegue true
-		procesarSC()
-	}
-}
-
-func procesarSC() {
-	fmt.Println("Inicia el proceso")
-	//evalua el proximo a procesar y si es el último
-	myInfo := <-chanMyInfo
-	if myInfo.proxAddr == "" {
-		fmt.Println("Soy el último nodo en procesar!")
-
-	} else {
-		fmt.Println("No soy el último, procesando SC!!")
-		fmt.Println(myInfo.proxAddr)
-		//envia notificación al próximo nodo a procesar su SC
-		info := Info{Tipo: "INICIO"}
-		enviar(myInfo.proxAddr, info) //próximo nodo
-	}
 }
 
 func sigmoid(x float64) (s float64) {
