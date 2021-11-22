@@ -128,4 +128,5 @@ func manejadorConexion(con net.Conn) {
 	var info Info
 	json.Unmarshal([]byte(bInfo), &info)
 	fmt.Println(info)
+	
 }
