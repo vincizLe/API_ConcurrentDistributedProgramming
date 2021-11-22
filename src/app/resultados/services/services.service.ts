@@ -10,4 +10,8 @@ export class ServicesService {
   public registerUser(data: any) {
     return this.http.post('http://localhost:8080/api/v1/appointments',data);
   }
+
+  public getProbability(dni: any) {
+    return this.http.get('http://localhost:8080/api/v1/appointments', dni);
+  }
 }

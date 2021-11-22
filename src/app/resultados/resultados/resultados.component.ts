@@ -14,10 +14,10 @@ export class ResultadosComponent implements OnInit {
   public porcentajeTotal: any = 1;
   public isResultado = false;
   //grafico
-  public chartDatasets:Array<any> = [{ data: [50, 40, 10] }];
+  public chartDatasets: Array<any> = [{ data: [50, 40, 10] }];
   public chartLabels: Array<any> = ['Phizer', 'Sinopharm', 'Astrazeneca'];
   //graficoresult
-  public chartDatasets2:Array<any> = [/* { data: [50, 40, 10] } */];
+  public chartDatasets2: Array<any> = [/* { data: [50, 40, 10] } */];
   public chartLabels2: Array<any> = ['Vivo', 'Muerto'];
 
 
@@ -52,11 +52,11 @@ export class ResultadosComponent implements OnInit {
     { valor: 1, nombre: 'Astrazeneca' },
   ];
 
-  constructor(private fb: FormBuilder, private service: ServicesService) {}
+  constructor(private fb: FormBuilder, private service: ServicesService) { }
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      dni : [''],
+      dni: [''],
       sexo: [''],
       edad: [''],
       flag_uci: [''],
@@ -72,7 +72,7 @@ export class ResultadosComponent implements OnInit {
     const data = {
       dni: this.form.value.dni,
       sexo: this.form.value.sexo,
-      edad: this.form.value.edad  / 100,
+      edad: this.form.value.edad / 100,
       flag_uci: this.form.value.flag_uci,
       con_oxigeno: this.form.value.con_oxigeno,
       con_ventilacion: this.form.value.con_ventilacion,
@@ -81,18 +81,29 @@ export class ResultadosComponent implements OnInit {
       fabricante_dosis: this.form.value.fabricante_dosis,
     };
     console.log('[Form] data request: ', data);
-    
+
+
 
     this.service.registerUser(data).subscribe((resp) => {
-      this.isResultado = true;
-      this.porcentaje = 0.8; /* resp.porcentaje */
-      this.porcentajeTotal = 1 - this.porcentaje;
 
-      //dibujar el grafico
-      this.chartDatasets2 = [
-        {data:[this.porcentaje, this.porcentajeTotal]}
-      ]
     });
+    
+    setTimeout(() => {                           //<<<---using ()=> syntax
+
+      this.service.getProbability(this.form.value.dni).subscribe((resp) => {
+
+        this.porcentaje = 0.8; /* resp.porcentaje */ //segun atributo
+        this.porcentajeTotal = 1 - this.porcentaje;
+
+        //dibujar el grafico
+        this.chartDatasets2 = [
+          { data: [this.porcentaje, this.porcentajeTotal] }
+        ]
+
+        this.isResultado = true;
+      })
+    }, 3000);
+
   }
 
   selectOpt(option: any) {
