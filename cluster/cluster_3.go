@@ -31,6 +31,7 @@ type Info struct {
 	Tipo          string
 	NumNodo       int
 	AddrNodo      string
+	Dni           int64
 	Probability   float64
 	V_age         float64
 	V_gender      float64
@@ -40,6 +41,14 @@ type Info struct {
 	V_first_dose  float64
 	V_second_dose float64
 	V_vaccine     float64
+}
+
+type InfoPrediction struct {
+	Tipo        string
+	NumNodo     int
+	AddrNodo    string
+	Dni         int64
+	Probability float64
 }
 
 type MyInfo struct {
@@ -80,7 +89,7 @@ func main() {
 		fmt.Print("Presione enter para iniciar...")
 		bufferIn := bufio.NewReader(os.Stdin)
 		bufferIn.ReadString('\n') //pausa espera hasta q presione enter
-		info := Info{"ENVIOTOKEN", token, direccion, float64(data.Probability), data.V_age, float64(data.V_gender), float64(data.V_uci), float64(data.V_oxigen), float64(data.V_ventilator), float64(data.V_first_dose), float64(data.V_second_dose), float64(data.V_vaccine)}
+		info := InfoPrediction{"ENVIOTOKEN", token, direccion, data.Dni, float64(data.Probability)}
 		go enviar(addrs, info)
 
 	}()
@@ -90,7 +99,7 @@ func main() {
 	ServicioSC()
 }
 
-func enviar(addr string, info Info) {
+func enviar(addr string, info InfoPrediction) {
 	con, _ := net.Dial("tcp", addr)
 	defer con.Close()
 	//codificar el mensaje a enviar
@@ -108,7 +117,7 @@ func ServicioSC() {
 	}
 }
 
-func returnInfo() (info Info) {
+func returnInfo() (info InfoPrediction) {
 	ln, _ := net.Listen("tcp", direccion)
 	defer ln.Close()
 	con, _ := ln.Accept()
@@ -126,7 +135,7 @@ func manejadorConexion(con net.Conn) {
 	defer con.Close()
 	bufferIn := bufio.NewReader(con)
 	bInfo, _ := bufferIn.ReadString('\n')
-	var info Info
+	var info InfoPrediction
 	json.Unmarshal([]byte(bInfo), &info)
 	fmt.Println(info)
 }

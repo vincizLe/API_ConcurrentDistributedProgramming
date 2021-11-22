@@ -36,6 +36,7 @@ type Info struct {
 	Tipo          string
 	NumNodo       int
 	AddrNodo      string
+	Dni           int64
 	Probability   float64
 	V_age         float64
 	V_gender      float64
@@ -45,6 +46,14 @@ type Info struct {
 	V_first_dose  float64
 	V_second_dose float64
 	V_vaccine     float64
+}
+
+type InfoPrediction struct {
+	Tipo        string
+	NumNodo     int
+	AddrNodo    string
+	Dni         int64
+	Probability float64
 }
 
 type MyInfo struct {
@@ -90,8 +99,8 @@ func main() {
 		fmt.Print("Presione enter para iniciar...")
 		bufferIn := bufio.NewReader(os.Stdin)
 		bufferIn.ReadString('\n') //pausa espera hasta q presione enter
-		info := Info{"ENVIOTOKEN", token, direccion, float64(probability), data.V_age, float64(data.V_gender), float64(data.V_uci), float64(data.V_oxigen), float64(data.V_ventilator), float64(data.V_first_dose), float64(data.V_second_dose), float64(data.V_vaccine)}
-		go enviar(addrs, info)
+		InfoPrediction := InfoPrediction{"ENVIOTOKEN", token, direccion, data.Dni, float64(probability)}
+		go enviar(addrs, InfoPrediction)
 
 	}()
 
@@ -100,7 +109,7 @@ func main() {
 	ServicioSC()
 }
 
-func enviar(addr string, info Info) {
+func enviar(addr string, info InfoPrediction) {
 	con, _ := net.Dial("tcp", addr)
 	defer con.Close()
 	//codificar el mensaje a enviar

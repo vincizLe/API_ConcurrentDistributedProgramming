@@ -14,6 +14,7 @@ var addrs string
 var token int
 
 //User
+var dni int64
 var probability float64
 var v_age float64
 var v_gender float64
@@ -31,6 +32,7 @@ type Info struct {
 	Tipo          string
 	NumNodo       int
 	AddrNodo      string
+	Dni           int64
 	Probability   float64
 	V_age         float64
 	V_gender      float64
@@ -40,6 +42,14 @@ type Info struct {
 	V_first_dose  float64
 	V_second_dose float64
 	V_vaccine     float64
+}
+
+type InfoPrediction struct {
+	Tipo        string
+	NumNodo     int
+	AddrNodo    string
+	Dni         int64
+	Probability float64
 }
 
 type MyInfo struct {
@@ -66,6 +76,7 @@ func main() {
 	fmt.Println(token)
 
 	//User
+	dni = 73947420
 	probability = 0
 	v_age = 0.20
 	v_gender = 1
@@ -92,7 +103,7 @@ func main() {
 		fmt.Print("Presione enter para iniciar...")
 		bufferIn := bufio.NewReader(os.Stdin)
 		bufferIn.ReadString('\n') //pausa espera hasta q presione enter
-		info := Info{"ENVIOTOKEN", token, direccion, probability, v_age, v_gender, v_uci, v_oxigen, v_ventilator, v_first_dose, v_second_dose, v_vaccine}
+		info := Info{"ENVIOTOKEN", token, direccion, dni, probability, v_age, v_gender, v_uci, v_oxigen, v_ventilator, v_first_dose, v_second_dose, v_vaccine}
 		go enviar(addrs, info)
 
 	}()
@@ -125,8 +136,8 @@ func manejadorConexion(con net.Conn) {
 	defer con.Close()
 	bufferIn := bufio.NewReader(con)
 	bInfo, _ := bufferIn.ReadString('\n')
-	var info Info
+	var info InfoPrediction
 	json.Unmarshal([]byte(bInfo), &info)
 	fmt.Println(info)
-	
+
 }
