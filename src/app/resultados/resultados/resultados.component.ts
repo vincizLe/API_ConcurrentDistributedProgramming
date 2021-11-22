@@ -14,7 +14,7 @@ export class ResultadosComponent implements OnInit {
   public porcentajeTotal: any = 1;
   public isResultado = false;
   //grafico
-  public chartDatasets: Array<any> = [{ data: [50, 40, 10] }];
+  public chartDatasets: Array<any> = [{ data: [29135, 16773, 2189] }];
   public chartLabels: Array<any> = ['Phizer', 'Sinopharm', 'Astrazeneca'];
   //graficoresult
   public chartDatasets2: Array<any> = [/* { data: [50, 40, 10] } */];
