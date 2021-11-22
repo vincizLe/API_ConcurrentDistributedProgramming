@@ -2,10 +2,13 @@ package main
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"net"
+	"net/http"
 	"os"
 	"time"
 )
@@ -43,12 +46,9 @@ type Info struct {
 	V_vaccine     float64
 }
 
-type InfoPrediction struct {
-	Tipo        string
-	NumNodo     int
-	AddrNodo    string
-	Dni         int64
-	Probability float64
+type Prediction struct {
+	Dni         string `json:"id_persona"`
+	Probability string `json:"probability"`
 }
 
 type MyInfo struct {
@@ -62,11 +62,12 @@ var chanIniciar chan bool
 var chanMyInfo chan MyInfo
 
 func main() {
-	fmt.Print("Ingrese el dirección del nodo:")
-	fmt.Scanf("%s\n", &direccion)
 
+	addrs = "localhost:8080/api/predict"
+	fmt.Print("Ingrese la dirección del nodo:")
+	fmt.Scanf("%s\n", &direccion)
 	fmt.Printf("Host %d = ", 1)
-	fmt.Scanf("%s\n", &(addrs))
+	fmt.Printf(addrs)
 
 	//2.- Generar el token
 	rand.Seed(time.Now().UTC().UnixNano())
@@ -89,7 +90,7 @@ func main() {
 		fmt.Print("Presione enter para iniciar...")
 		bufferIn := bufio.NewReader(os.Stdin)
 		bufferIn.ReadString('\n') //pausa espera hasta q presione enter
-		info := InfoPrediction{"ENVIOTOKEN", token, direccion, data.Dni, float64(data.Probability)}
+		info := Prediction{data.Dni, data.Probability}
 		go enviar(addrs, info)
 
 	}()
@@ -99,12 +100,35 @@ func main() {
 	ServicioSC()
 }
 
-func enviar(addr string, info InfoPrediction) {
-	con, _ := net.Dial("tcp", addr)
-	defer con.Close()
-	//codificar el mensaje a enviar
-	byteInfo, _ := json.Marshal(info)
-	fmt.Fprintln(con, string(byteInfo))
+func enviar(addr string, info Prediction) {
+	/*proba, err := strconv.ParseFloat(info.Probability, 64)
+	if err != nil {
+		fmt.Println(err)
+	}*/
+	prediccion := map[string]string{"id_persona": info.Dni, "probability": info.Probability}
+
+	json_data, err := json.Marshal(prediccion)
+
+	resp, err := http.Post("http://localhost:8080/api/predict", "application/json",
+		bytes.NewBuffer(json_data))
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	var res map[string]interface{}
+
+	json.NewDecoder(resp.Body).Decode(&res)
+
+	fmt.Println(res["json"])
+
+	/*
+		con, _ := net.Dial("tcp", addr)
+
+		defer con.Close()
+		byteInfo, _ := json.Marshal(info)
+		fmt.Fprintln(con, string(byteInfo))
+		//fmt.Println(string(byteInfo))*/
+
 }
 
 /////////////////////
@@ -117,7 +141,7 @@ func ServicioSC() {
 	}
 }
 
-func returnInfo() (info InfoPrediction) {
+func returnInfo() (info Prediction) {
 	ln, _ := net.Listen("tcp", direccion)
 	defer ln.Close()
 	con, _ := ln.Accept()
@@ -127,6 +151,7 @@ func returnInfo() (info InfoPrediction) {
 	bInfo, _ := bufferIn.ReadString('\n')
 	json.Unmarshal([]byte(bInfo), &info)
 	fmt.Println(info)
+
 	return
 }
 
@@ -135,7 +160,7 @@ func manejadorConexion(con net.Conn) {
 	defer con.Close()
 	bufferIn := bufio.NewReader(con)
 	bInfo, _ := bufferIn.ReadString('\n')
-	var info InfoPrediction
+	var info Prediction
 	json.Unmarshal([]byte(bInfo), &info)
 	fmt.Println(info)
 }

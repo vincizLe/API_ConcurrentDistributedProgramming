@@ -48,12 +48,21 @@ type Info struct {
 	V_vaccine     float64
 }
 
-type InfoPrediction struct {
-	Tipo        string
-	NumNodo     int
-	AddrNodo    string
-	Dni         int64
-	Probability float64
+type User struct {
+	V_dni         int
+	V_age         float64
+	V_gender      float64
+	V_uci         float64
+	V_oxigen      float64
+	V_ventilator  float64
+	V_first_dose  float64
+	V_second_dose float64
+	V_vaccine     float64
+}
+
+type Prediction struct {
+	Dni         string `json:"id_persona"`
+	Probability string `json:"probability"`
 }
 
 type MyInfo struct {
@@ -67,11 +76,13 @@ var chanIniciar chan bool
 var chanMyInfo chan MyInfo
 
 func main() {
-	fmt.Print("Ingrese el dirección del nodo:")
-	fmt.Scanf("%s\n", &direccion)
+	direccion = "localhost:9002"
+	fmt.Print("Ingrese la dirección del nodo:")
+	fmt.Print(direccion)
 
-	fmt.Printf("Host %d = ", 1)
-	fmt.Scanf("%s\n", &(addrs))
+	addrs = "localhost:9003"
+	fmt.Print("Host 1")
+	fmt.Print(addrs)
 
 	//2.- Generar el token
 	rand.Seed(time.Now().UTC().UnixNano())
@@ -99,7 +110,7 @@ func main() {
 		fmt.Print("Presione enter para iniciar...")
 		bufferIn := bufio.NewReader(os.Stdin)
 		bufferIn.ReadString('\n') //pausa espera hasta q presione enter
-		InfoPrediction := InfoPrediction{"ENVIOTOKEN", token, direccion, data.Dni, float64(probability)}
+		InfoPrediction := Prediction{strconv.Itoa(data.V_dni), strconv.FormatFloat(probability, 'E', -1, 64)}
 		go enviar(addrs, InfoPrediction)
 
 	}()
@@ -109,7 +120,7 @@ func main() {
 	ServicioSC()
 }
 
-func enviar(addr string, info InfoPrediction) {
+func enviar(addr string, info Prediction) {
 	con, _ := net.Dial("tcp", addr)
 	defer con.Close()
 	//codificar el mensaje a enviar
@@ -127,7 +138,7 @@ func ServicioSC() {
 	}
 }
 
-func returnInfo() (info Info) {
+func returnInfo() (info User) {
 	ln, _ := net.Listen("tcp", direccion)
 	defer ln.Close()
 	con, _ := ln.Accept()
@@ -145,7 +156,7 @@ func manejadorConexion(con net.Conn) {
 	defer con.Close()
 	bufferIn := bufio.NewReader(con)
 	bInfo, _ := bufferIn.ReadString('\n')
-	var info Info
+	var info User
 	json.Unmarshal([]byte(bInfo), &info)
 	fmt.Println(info)
 }
