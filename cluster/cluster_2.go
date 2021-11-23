@@ -77,11 +77,11 @@ var chanMyInfo chan MyInfo
 
 func main() {
 	direccion = "localhost:9002"
-	fmt.Print("Ingrese la dirección del nodo:")
+	fmt.Print("Ingrese la dirección del nodo: ")
 	fmt.Print(direccion)
 
 	addrs = "localhost:9003"
-	fmt.Print("Host 1")
+	fmt.Print("Host 1: ")
 	fmt.Print(addrs)
 
 	//2.- Generar el token
@@ -97,10 +97,9 @@ func main() {
 
 	data := returnInfo()
 
-	probability = prediction(weights, bias, data.V_age, float64(data.V_gender), float64(data.V_uci), float64(data.V_oxigen), float64(data.V_ventilator), float64(data.V_first_dose), float64(data.V_second_dose), float64(data.V_vaccine))
-	//probability = prediction(weights, bias, v_age, float64(v_gender), float64(v_uci), float64(v_oxigen), float64(v_ventilator), float64(v_first_dose), float64(v_second_dose), float64(v_vaccine))
-	//fmt.Println(data.V_age, data.V_gender, data.V_oxigen, data.V_uci, data.V_ventilator, data.V_first_dose, data.V_second_dose, data.V_vaccine)
-	//Establecer el valor inicial de la información del nodo
+	probability = prediction(weights, bias, data.V_age, float64(data.V_gender),
+		float64(data.V_uci), float64(data.V_oxigen), float64(data.V_ventilator),
+		float64(data.V_first_dose), float64(data.V_second_dose), float64(data.V_vaccine))
 	go func() {
 		chanMyInfo <- MyInfo{0, true, 1000001, ""}
 	}()

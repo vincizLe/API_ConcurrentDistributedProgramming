@@ -63,8 +63,8 @@ var chanMyInfo chan MyInfo
 
 func main() {
 
-	addrs = "localhost:8080/api/predict"
-	fmt.Print("Ingrese la dirección del nodo:")
+	addrs = " localhost:8080/api/predict"
+	fmt.Print("Ingrese la dirección del nodo: ")
 	fmt.Scanf("%s\n", &direccion)
 	fmt.Printf("Host %d = ", 1)
 	fmt.Printf(addrs)
@@ -101,10 +101,6 @@ func main() {
 }
 
 func enviar(addr string, info Prediction) {
-	/*proba, err := strconv.ParseFloat(info.Probability, 64)
-	if err != nil {
-		fmt.Println(err)
-	}*/
 	prediccion := map[string]string{"id_persona": info.Dni, "probability": info.Probability}
 
 	json_data, err := json.Marshal(prediccion)
@@ -120,14 +116,6 @@ func enviar(addr string, info Prediction) {
 	json.NewDecoder(resp.Body).Decode(&res)
 
 	fmt.Println(res["json"])
-
-	/*
-		con, _ := net.Dial("tcp", addr)
-
-		defer con.Close()
-		byteInfo, _ := json.Marshal(info)
-		fmt.Fprintln(con, string(byteInfo))
-		//fmt.Println(string(byteInfo))*/
 
 }
 

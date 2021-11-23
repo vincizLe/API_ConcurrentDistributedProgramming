@@ -89,21 +89,21 @@ func PostQuery(res http.ResponseWriter, req *http.Request) {
 	_ = json.NewDecoder(req.Body).Decode(&data2)
 	data.Data = append(data.Data, data2)
 	v_dni = data2.Dni
-	v_age = 1         //data2.Edad
-	v_gender = 1      //data2.Sexo
-	v_uci = 1         //data2.FlagUci
-	v_oxigen = 1      //data2.Oxigeno
-	v_ventilator = 1  //data2.Ventilacion
-	v_first_dose = 1  //data2.FabricDosis1
-	v_second_dose = 1 //data2.FabricDosis2
-	v_vaccine = 1     //data2.FlagVacuna
+	v_age = data2.Edad
+	v_gender = data2.Sexo
+	v_uci = data2.FlagUci
+	v_oxigen = data2.Oxigeno
+	v_ventilator = data2.Ventilacion
+	v_first_dose = data2.FabricDosis1
+	v_second_dose = data2.FabricDosis2
+	v_vaccine = data2.FlagVacuna
 
 	json.NewEncoder(res).Encode(data.Data)
 
 	user := User{v_dni, v_age, v_gender, v_uci, v_oxigen, v_ventilator, v_first_dose, v_second_dose, v_vaccine}
 	go enviar("localhost:9001", user)
 	//ServicioSC()
-	fmt.Println(user, "gaaa")
+	fmt.Println(user)
 }
 
 func enviar(addr string, user User) {

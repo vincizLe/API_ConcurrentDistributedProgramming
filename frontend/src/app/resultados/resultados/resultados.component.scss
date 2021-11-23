@@ -1,0 +1,44 @@
+.pie{
+    width: 500px;
+    height: 500px;
+}
+
+.header{
+    display: flex;
+}
+.header-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.boton{
+    width: 30%;
+    margin-top: 10px;
+}
+.flex-column{
+    display: flex;
+    flex-direction: column;
+}
+.m-r-5{
+    margin-right: 40px;
+}
+.body{
+    text-align: center;
+}
+.center{
+    width: 100%;
+    // margin-bottom: 200px;
+}
+.pie2-bottom{
+    width: 100%;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 200px;
+}
+.pie2{
+    width: 300px;
+    height: 300px;
+}

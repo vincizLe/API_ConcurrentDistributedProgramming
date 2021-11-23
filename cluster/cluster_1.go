@@ -75,11 +75,11 @@ var chanMyInfo chan MyInfo
 
 func main() {
 	direccion = "localhost:9001"
-	fmt.Print("Ingrese la dirección del nodo:")
+	fmt.Print("Ingrese la dirección del nodo: ")
 	fmt.Print(direccion)
 
 	addrs = "localhost:9002"
-	fmt.Print("Host 1")
+	fmt.Print(" Host 1: ")
 	fmt.Print(addrs)
 
 	//2.- Generar el token
@@ -87,22 +87,6 @@ func main() {
 
 	token = rand.Intn(1000000)
 	fmt.Println(token)
-
-	//User
-	/*dni = 73947420
-	probability = 0
-	v_age = 0.20
-	v_gender = 1
-	v_uci = 0
-	v_oxigen = 0
-	v_ventilator = 0
-	v_first_dose = 0
-	v_second_dose = 0
-	v_vaccine = 0*/
-
-	//sinopharm: 0.35
-	//pfizer:0.65
-	//astrazeneca:1
 
 	chanIniciar = make(chan bool)
 	chanMyInfo = make(chan MyInfo)

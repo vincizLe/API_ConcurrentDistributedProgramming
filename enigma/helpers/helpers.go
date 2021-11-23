@@ -23,17 +23,25 @@ func ReadCSVFromUrl(url string) (models.Data, error) {
 		} else if error != nil {
 			log.Fatal(error)
 		}
-		dni,_ := strconv.Atoi(line[5])
+		dni, _ := strconv.Atoi(line[5])
+		age, _ := strconv.ParseFloat(line[6], 64)
+		gender, _ := strconv.ParseFloat(line[7], 64)
+		uci, _ := strconv.ParseFloat(line[9], 64)
+		oxigen, _ := strconv.ParseFloat(line[12], 64)
+		ventilador, _ := strconv.ParseFloat(line[13], 64)
+		dosis1, _ := strconv.ParseFloat(line[16], 64)
+		dosis2, _ := strconv.ParseFloat(line[18], 64)
+		vaccine, _ := strconv.ParseFloat(line[20], 64)
 		data.Data = append(data.Data, models.RowData{
-			Dni:			dni,
-			Edad:			line[6],
-			Sexo:			line[7],
-			FlagUci:		line[9],
-			Oxigeno:		line[12],
-			Ventilacion:	line[13],
-			FlagVacuna:		line[16],
-			FabricDosis1:	line[18],
-			FabricDosis2:	line[20],
+			Dni:          dni,
+			Edad:         age,
+			Sexo:         gender,
+			FlagUci:      uci,
+			Oxigeno:      oxigen,
+			Ventilacion:  ventilador,
+			FlagVacuna:   dosis1,
+			FabricDosis1: dosis2,
+			FabricDosis2: vaccine,
 		})
 	}
 	return data, nil
